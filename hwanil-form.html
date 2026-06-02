@@ -491,12 +491,6 @@ body {
   </div>
 </div>
 
-<!-- 🔴 버그 수정: setupGuide를 HTML에도 추가 -->
-<div class="setup-guide" id="setupGuide">
-  <strong>⚙️ 관리자 설정 필요</strong>
-  HTML 주석의 Apps Script 코드를 구글 시트에 배포하고,
-  아래 <code>SCRIPT_URL</code> 변수에 배포 URL을 입력해야 연동됩니다.
-</div>
 
 <!-- Form -->
 <div class="wrap" id="formSec">
@@ -549,13 +543,13 @@ body {
     <div class="field" id="f-email">
       <label>이메일 <span class="req">*</span></label>
       <input type="email" id="email" placeholder="example@hwanil.com" autocomplete="email">
-      <div class="fhint">가입 안내 페이지가 이메일로 발송됩니다.</div>
+      <div class="fhint">가입 안내 페이지가 이 이메일로 발송됩니다.</div>
       <div class="ferr" id="e-email">올바른 이메일을 입력해 주세요.</div>
     </div>
     <div class="field" id="f-phone">
       <label>휴대폰 <span class="req">*</span></label>
       <input type="tel" id="phone" placeholder="010-0000-0000" maxlength="13" autocomplete="tel">
-      <div class="fhint">가입 안내 페이지가 문자로도 발송됩니다.</div>
+
       <div class="ferr" id="e-phone">휴대폰 번호를 입력해 주세요.</div>
     </div>
   </div>
@@ -636,11 +630,11 @@ body {
   </div>
   <div class="a-err" id="e-agree">개인정보 수집·이용에 동의해 주세요.</div>
 
-  <button class="sub-btn" id="subBtn" onclick="submitForm()">
+  <button class="sub-btn" id="subBtn" onclick="submitForm()" style="margin-top:28px;">
     신청 완료 및 가입 안내 받기
   </button>
   <p class="sub-note">
-    이메일·문자로 가입 안내 페이지가 자동 발송됩니다.<br>
+    이메일로 가입 안내 페이지가 자동 발송됩니다.<br>
     문의 <a href="tel:01099957988">010-9995-7988</a> · 교보생명 퇴직연금 이규현 과장
   </p>
 </div>
@@ -653,7 +647,6 @@ body {
 
   <div class="s-chips">
     <div class="s-chip"><span class="s-chip-icon">📧</span><span id="c-email-chip"></span></div>
-    <div class="s-chip"><span class="s-chip-icon">💬</span><span id="c-phone-chip"></span></div>
   </div>
 
   <div class="s-card">
@@ -664,7 +657,7 @@ body {
     <div class="s-row"><span class="s-key">선물</span>     <span class="s-val" id="c-gift"></span></div>
   </div>
   <div class="s-notice">
-    📩 이메일·문자가 도착하지 않으면 스팸함을 확인해 주세요.<br>
+    📩 이메일이 도착하지 않으면 스팸함을 확인해 주세요.<br>
     추가 문의: 교보생명 퇴직연금 이규현 과장 <strong>010-9995-7988</strong>
   </div>
 </div>
@@ -672,16 +665,9 @@ body {
 <script>
 // ══════════════════════════════════════════════════════════════
 //  ★ 아래 URL을 Apps Script 배포 URL로 교체하세요 ★
-const SCRIPT_URL = "
-https://script.google.com/macros/s/AKfycby_QIFprx-xxH4znVkIOafDulPB4Z8S8eC8S7qByNLxU7sckFEqZNCTDQ4_JnsuOPeI/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_QIFprx-xxH4znVkIOafDulPB4Z8S8eC8S7qByNLxU7sckFEqZNCTDQ4_JnsuOPeI/exec";
 // ══════════════════════════════════════════════════════════════
 
-// setupGuide 배너: URL 설정 완료 시 숨김
-(function() {
-  const banner = document.getElementById('setupGuide');
-  if (!banner) return;
-  if (!SCRIPT_URL.startsWith('YOUR')) banner.style.display = 'none';
-})();
 
 let agreed = false;
 let consented = false;
@@ -762,7 +748,6 @@ async function submitForm() {
     birth:    validBirth(bY, bMRaw, bDRaw),
     empId:    !!empId,
     email:    !!email && emailRe.test(email),
-    phone:    phone.replace(/\D/g,'').length >= 10,
     tf:       !!tf,
     gift:     !!gift,
     consent:  consented,
@@ -773,7 +758,6 @@ async function submitForm() {
   setErr('f-birth', 'e-birth',    !ok.birth);
   setErr('f-empid', 'e-empid',    !ok.empId);
   setErr('f-email', 'e-email',    !ok.email);
-  setErr('f-phone', 'e-phone',    !ok.phone);
 
   // 이전방식·선물·동의는 field wrapper가 없으므로 별도 처리
   const tErr = document.getElementById('e-transfer');
@@ -841,11 +825,9 @@ async function submitForm() {
   sDiv.classList.add('on');   // .success.on { display:block } 트리거
 
   document.getElementById('s-body').innerHTML =
-    `가입 안내 페이지를 <strong>${email}</strong>과<br>
-     <strong>${phone}</strong>으로 발송했습니다.`;
+    `가입 안내 페이지를 <strong>${email}</strong>으로<br>발송했습니다.`;
 
   document.getElementById('c-email-chip').textContent = email + '로 이메일 발송';
-  document.getElementById('c-phone-chip').textContent = phone + '로 문자 발송';
   document.getElementById('c-name').textContent  = name;
   document.getElementById('c-empid').textContent = empId;
   document.getElementById('c-birth').textContent = birth;
