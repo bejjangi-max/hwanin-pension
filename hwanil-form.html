@@ -665,7 +665,7 @@ body {
 <script>
 // ══════════════════════════════════════════════════════════════
 //  ★ 아래 URL을 Apps Script 배포 URL로 교체하세요 ★
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_QIFprx-xxH4znVkIOafDulPB4Z8S8eC8S7qByNLxU7sckFEqZNCTDQ4_JnsuOPeI/exec";
+const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_DEPLOYMENT_URL_HERE";
 // ══════════════════════════════════════════════════════════════
 
 
@@ -791,28 +791,23 @@ async function submitForm() {
     gift: gift.value,
   };
 
-  let serverOk = false;
   try {
     if (!SCRIPT_URL.startsWith('YOUR')) {
-      // 🔴 버그 수정: no-cors 환경에서는 Content-Type을 text/plain으로 설정해야
-      //    simple request가 되어 preflight 없이 전송됨.
-      //    body는 JSON 문자열 그대로 전송하고 Apps Script에서 JSON.parse()
+      // URLSearchParams(form-urlencoded)로 전송 → no-cors에서 완전 지원
+      // Apps Script의 e.parameter로 바로 수신 가능
+      const params = new URLSearchParams();
+      Object.entries(payload).forEach(([k, v]) => params.append(k, v));
+
       await fetch(SCRIPT_URL, {
         method: 'POST',
-        mode:   'no-cors',   // CORS 우회
-        // no-cors에서는 application/json 헤더 불가 → text/plain 사용
-        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-        body: JSON.stringify(payload),
+        mode:   'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString(),
       });
-      serverOk = true;
     } else {
-      // URL 미설정: 로컬 테스트 모드
       console.log('[TEST MODE] payload:', payload);
-      serverOk = true;
     }
   } catch(err) {
-    // no-cors opaque 응답은 정상적으로 catch에 걸리지 않음
-    // 실제 네트워크 오류 시에만 catch
     console.error('전송 오류:', err);
     btn.disabled = false;
     btn.textContent = '다시 시도해 주세요';
