@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>교보생명 퇴직연금 | 환인제약 임직원 안내</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root { --ink: #0F0C0D; --ink2: #1E1419; --red: #C0162B; --red-lt: #E8304A; --gold: #B8975A; --glt: #D4AF7A; --bg: #FDFAF6; --bg2: #F3EDE3; --line: #E5DDD2; --muted: #8A847C; --white: #FFFFFF;
+}
+html { scroll-behavior:smooth; }
+body { background:var(--bg); font-family:'Noto Sans KR',sans-serif; color:var(--ink); overflow-x:hidden; -webkit-font-smoothing:antialiased;
+} 
+/* ══ 홍보 인트로 ══ */
+.promo-intro {
+  background: var(--ink);
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  position: relative; overflow: hidden;
+  padding: 60px 24px 36px;
+}
+.promo-intro::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(192,22,43,.55) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 100%, rgba(184,151,90,.12) 0%, transparent 55%);
+}
+.promo-intro-inner { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; }
+.promo-badge {
+  display: inline-block;
+  background: rgba(184,151,90,.15); border: 1px solid rgba(184,151,90,.35);
+  border-radius: 100px; padding: 6px 18px;
+  font-size: 10px; letter-spacing: .14em; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 28px;
+}
+.promo-rank {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 15px; font-weight: 500; letter-spacing: .04em;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 8px;
+}
+.promo-title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: clamp(36px, 10vw, 58px);
+  font-weight: 700; color: #fff;
+  line-height: 1.15; letter-spacing: -.03em;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.promo-rank-num {
+  color: var(--gold-lt);
+  font-style: normal;
+  /* 폰트·크기 promo-title과 동일하게 상속 */
+}
+.promo-company {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 17px; font-weight: 500; color: rgba(255,255,255,.6);
+  letter-spacing: .02em; margin-bottom: 20px;
+}
+.promo-stats {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; margin-bottom: 0;
+  background: rgba(184,151,90,.1);
+  border: 1px solid rgba(184,151,90,.3);
+  border-radius: 16px; padding: 24px 16px;
+}
+.promo-stat { flex: 1; text-align: center; }
+.promo-all-1 {
+  font-size: 13px; font-weight: 700; letter-spacing: .04em;
+  color: var(--gold-lt); margin-bottom: 14px; text-align: center;
+}
+.promo-stat-yr {
+  font-size: 12px; font-weight: 700; letter-spacing: .06em;
+  color: var(--gold); margin-bottom: 5px;
+}
+.promo-stat-num {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: clamp(22px, 5.5vw, 30px); font-weight: 700;
+  color: #fff; line-height: 1;
+}
+.promo-stat-num span { font-size: .55em; color: var(--gold-lt); }
+.promo-period-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin-bottom: 20px;
+}
+.promo-period-chip {
+  font-size: 14px; font-weight: 700; letter-spacing: .04em;
+  color: var(--ink); background: var(--gold-lt);
+  padding: 6px 16px; border-radius: 100px;
+}
+.promo-period-sep { color: rgba(255,255,255,.2); font-size: 12px; }
+
+.promo-stat-label { font-size: 11px; font-weight: 600; color: var(--gold); margin-top: 6px; line-height: 1.4; letter-spacing: .04em; }
+.promo-stat-div { width: 1px; height: 40px; background: rgba(255,255,255,.1); flex-shrink: 0; }
+.promo-scroll-btn {
+  display: inline-block; padding: 14px 32px;
+  background: var(--red); color: #fff;
+  border-radius: 100px; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all .2s;
+  box-shadow: 0 8px 24px rgba(192,22,43,.35);
+}
+.promo-scroll-btn:hover { background: #a50d22; transform: translateY(-2px); }
+
+/* ══ 가입 신청 CTA ══ */
+.promo-cta {
+  background: var(--ink);
+  padding: 72px 24px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.promo-cta::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(192,22,43,.4) 0%, transparent 65%);
+}
+.promo-cta-inner { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; }
+.promo-cta-badge {
+  display: inline-block;
+  background: rgba(192,22,43,.2); border: 1px solid rgba(192,22,43,.4);
+  border-radius: 100px; padding: 5px 16px;
+  font-size: 10px; letter-spacing: .12em; color: #FF8090;
+  text-transform: uppercase; margin-bottom: 20px;
+}
+.promo-cta-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 5vw, 30px); font-weight: 700;
+  color: #fff; line-height: 1.3; margin-bottom: 16px;
+}
+.promo-cta-desc {
+  font-size: 13px; color: rgba(255,255,255,.45);
+  line-height: 1.8; margin-bottom: 32px;
+}
+.promo-cta-btn {
+  display: inline-block; padding: 18px 40px;
+  background: var(--red); color: #fff;
+  border-radius: 14px; font-size: 16px; font-weight: 700;
+  text-decoration: none; transition: all .22s;
+  box-shadow: 0 8px 28px rgba(192,22,43,.4);
+  letter-spacing: .02em;
+}
+.promo-cta-btn:hover { background: #a50d22; transform: translateY(-2px); box-shadow: 0 12px 36px rgba(192,22,43,.5); }
+.promo-cta-contact {
+  margin-top: 20px; font-size: 12px; color: rgba(255,255,255,.3);
+}
+.promo-cta-contact a { color: var(--gold); text-decoration: none; margin-left: 6px; }
+.promo-gift-row {
+  display: inline-block;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 14px; font-weight: 700;
+  color: var(--red);
+  margin-bottom: 20px;
+  line-height: 1.6;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+}
+
+/* ── Nav ── */
+.nav { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(15,12,13,.93); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid rgba(184,151,90,.18); display:flex; align-items:center; justify-content:space-between; padding:0 20px; height:54px;
+}
+.nav-logo { display:flex; align-items:center; flex-shrink:0; font-size:13px; font-weight:600; color:#fff; letter-spacing:.02em;
+}
+.nav-logo .logo-x { color:rgba(255,255,255,.35); margin:0 7px; font-weight:300; font-size:14px;
+}
+.nav-logo .logo-kyobo { color:var(--gold); }
+.nav-links { display:flex; gap:2px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+}
+.nav-links::-webkit-scrollbar { display:none; }
+/* 🔴 버그수정: 함수명을 navTo()로 변경하여 window.scrollTo 충돌 방지 */
+.nav-btn { font-size:11px; color:rgba(255,255,255,.45); background:none; border:none; cursor:pointer; padding:6px 10px; border-radius:100px; white-space:nowrap; font-family:'Noto Sans KR',sans-serif; transition:all .2s;
+}
+.nav-btn:hover,.nav-btn.active { color:#fff; background:rgba(192,22,43,.28); } /* ── Hero ── */
+.hero { background:var(--ink); min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:100px 24px 64px; position:relative; overflow:hidden;
+}
+.hero-bg { position:absolute; inset:0; background: radial-gradient(ellipse 100% 60% at 50% 0%,rgba(192,22,43,.48) 0%,transparent 65%), radial-gradient(ellipse 60% 40% at 20% 100%,rgba(184,151,90,.1) 0%,transparent 60%);
+}
+.hero-ring { position:absolute; border-radius:50%; border:1px solid rgba(184,151,90,.07);
+}
+.hero-ring:nth-child(1) { width:560px; height:560px; top:-200px; left:50%; margin-left:-280px; animation:spin 80s linear infinite; }
+.hero-ring:nth-child(2) { width:820px; height:820px; top:-340px; left:50%; margin-left:-410px; animation:spin 120s linear infinite reverse; }
+@keyframes spin { to { transform:rotate(360deg); } } .hero-badge { position:relative; display:inline-flex; align-items:center; gap:8px; background:rgba(184,151,90,.1); border:1px solid rgba(184,151,90,.3); border-radius:100px; padding:7px 18px; font-size:10px; letter-spacing:.12em; color:var(--gold); text-transform:uppercase; margin-bottom:28px; animation:fadeUp .8s ease both;
+}
+.hero-badge::before { content:'✦'; font-size:8px; } .hero h1 { position:relative; font-family:'Playfair Display',serif; font-size:clamp(28px,7vw,40px); font-weight:700; color:#fff; line-height:1.2; letter-spacing:-.02em; margin-bottom:16px; animation:fadeUp .8s .1s ease both;
+}
+.hero h1 em { color:var(--glt); font-style:normal; } .hero-sub { position:relative; font-size:14px; color:rgba(255,255,255,.45); line-height:1.9; margin-bottom:44px; animation:fadeUp .8s .2s ease both;
+}
+.hero-name { color:var(--glt); font-weight:600; } /* 이전방식 토글 */
+.tf-toggle { position:relative; display:inline-flex; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:100px; padding:4px; gap:4px; margin-bottom:52px; animation:fadeUp .8s .3s ease both;
+}
+.tf-btn { padding:10px 22px; border-radius:100px; border:none; background:none; font-size:13px; font-weight:500; font-family:'Noto Sans KR',sans-serif; color:rgba(255,255,255,.45); cursor:pointer; transition:all .25s;
+}
+.tf-btn.on { background:var(--red); color:#fff; box-shadow:0 4px 16px rgba(192,22,43,.4); } .scroll-cue { position:relative; animation:fadeUp .8s .5s ease both; display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+.scroll-cue span { font-size:10px; color:rgba(255,255,255,.25); letter-spacing:.1em; }
+.scroll-arrow { width:30px; height:30px; border-radius:50%; border:1px solid rgba(255,255,255,.12); display:flex; align-items:center; justify-content:center; font-size:13px; color:rgba(255,255,255,.35); animation:bob 2s ease-in-out infinite;
+}
+@keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} } /* ── Section ── */
+section { padding:68px 20px; max-width:620px; margin:0 auto; }
+.sec-tag { display:inline-flex; align-items:center; gap:8px; font-size:9px; font-weight:700; letter-spacing:.14em; color:var(--red); text-transform:uppercase; margin-bottom:12px;
+}
+.sec-tag::before { content:''; width:18px; height:2px; background:var(--red); }
+h2 { font-family:'Playfair Display',serif; font-size:clamp(22px,5vw,28px); font-weight:700; color:var(--ink); margin-bottom:8px; line-height:1.3; letter-spacing:-.02em;
+}
+.sec-desc { font-size:13px; color:var(--muted); line-height:1.8; margin-bottom:32px; }
+.divider { height:1px; background:linear-gradient(90deg,transparent,var(--line),transparent); max-width:620px; margin:0 auto; } /* ── 실물이전 불가 안내 박스 ── */
+.notice-box { display:flex; gap:12px; align-items:flex-start; background:#FFFBF0; border:1.5px solid #F5C842; border-radius:14px; padding:16px 18px; margin-bottom:24px;
+}
+.notice-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+.notice-title { font-size:13px; font-weight:700; color:#7A4F00; margin-bottom:5px; }
+.notice-text { font-size:12px; color:#6B4500; line-height:1.75; }
+.notice-text strong { color:#7A4F00; } 
+/* ── 이전절차 헤더 ── */
+.process-header {
+  background: var(--white);
+  text-align: center;
+  padding: 28px 20px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.process-toggle-row {
+  display: inline-flex;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 4px; gap: 4px;
+  margin-bottom: 20px;
+}
+.process-toggle-row .tf-btn {
+  padding: 10px 22px; border-radius: 100px; border: none;
+  background: none; font-size: 13px; font-weight: 500;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--muted); cursor: pointer; transition: all .25s;
+}
+.process-toggle-row .tf-btn.on {
+  background: var(--red); color: #fff;
+  box-shadow: 0 4px 16px rgba(192,22,43,.35);
+}
+.process-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px,5vw,28px); font-weight:700;
+  color: var(--ink); margin-bottom: 8px; letter-spacing: -.02em;
+  line-height: 1.3;
+}
+.process-body {
+  padding: 24px 20px 68px;
+  max-width: 620px; margin: 0 auto;
+}
+
+/* ── Timeline ── */
+.tl { position:relative; padding-left:26px; }
+.tl::before { content:''; position:absolute; left:7px; top:10px; bottom:10px; width:1.5px; background:linear-gradient(to bottom,var(--red),var(--gold)); border-radius:2px;
+}
+.tl-item { position:relative; margin-bottom:20px; opacity:0; transform:translateX(-10px); transition:all .5s ease;
+}
+.tl-item.vis { opacity:1; transform:none; }
+.tl-item:last-child { margin-bottom:0; }
+.tl-dot { position:absolute; left:-26px; top:6px; width:16px; height:16px; border-radius:50%; background:var(--red); border:2.5px solid var(--bg); box-shadow:0 0 0 1.5px var(--red); display:flex; align-items:center; justify-content:center; font-size:7px; color:#fff; font-weight:700;
+}
+.tl-card { background:var(--white); border:1px solid var(--line); border-radius:14px; padding:16px 18px; box-shadow:0 1px 6px rgba(0,0,0,.04);
+}
+.tl-day { font-size:10px; letter-spacing:.06em; color:var(--red); font-weight:700; margin-bottom:5px; }
+.tl-title { font-size:15px; font-weight:600; color:var(--ink); margin-bottom:5px; }
+.tl-desc { font-size:12px; color:var(--muted); line-height:1.7; }
+.tl-chip { display:inline-block; margin-top:10px; padding:4px 10px; background:var(--bg2); border-radius:100px; font-size:10px; color:var(--ink); letter-spacing:.02em;
+}
+.tl-section { display:none; }
+.tl-section.on { display:block; } /* ── 교보생명 소개 ── */
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.info-card { background:var(--white); border:1px solid var(--line); border-radius:14px; padding:18px; box-shadow:0 1px 6px rgba(0,0,0,.04); opacity:0; transform:translateY(14px); transition:all .5s ease;
+}
+.info-card.vis { opacity:1; transform:none; }
+.info-card.full { grid-column:1/-1; }
+.ic-icon { font-size:26px; margin-bottom:10px; }
+.ic-title { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:6px; }
+.ic-desc { font-size:11px; color:var(--muted); line-height:1.7; }
+.ic-badge { display:inline-block; margin-top:10px; padding:4px 11px; background:var(--red); color:#fff; border-radius:100px; font-size:10px; font-weight:700;
+} /* 비교 테이블 */
+.compare { background:var(--white); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-top:16px; box-shadow:0 1px 6px rgba(0,0,0,.04);
+}
+.cmp-hdr { display:grid; grid-template-columns:1fr 1fr 1fr; background:var(--ink); }
+.cmp-hdr > div { padding:11px 13px; font-size:11px; font-weight:700; color:rgba(255,255,255,.45); text-align:center; }
+.cmp-hdr > div:first-child { text-align:left; }
+.cmp-hdr .kyobo { color:var(--glt); }
+.cmp-row { display:grid; grid-template-columns:1fr 1fr 1fr; border-top:1px solid var(--line); }
+.cmp-row > div { padding:11px 13px; font-size:12px; text-align:center; }
+.cmp-row > div:first-child { text-align:left; font-size:11px; color:var(--muted); }
+.cmp-row .kyobo-val { color:var(--red); font-weight:700; }
+.cmp-row:nth-child(even) { background:var(--bg2); } /* ── 포트폴리오 ── */
+.port-section { background:var(--ink); padding:68px 0; }
+.port-inner { max-width:620px; margin:0 auto; padding:0 20px; }
+.port-section h2 { color:#fff; }
+.port-section .sec-desc { color:rgba(255,255,255,.4); }
+.port-section .sec-tag { color:var(--gold); }
+.port-section .sec-tag::before { background:var(--gold); } .ptabs { display:flex; gap:6px; margin-bottom:22px; flex-wrap:wrap; }
+.ptab { padding:8px 16px; border-radius:100px; border:1px solid rgba(255,255,255,.14); background:none; font-size:12px; font-family:'Noto Sans KR',sans-serif; color:rgba(255,255,255,.45); cursor:pointer; transition:all .2s;
+}
+.ptab.on { background:var(--red); border-color:var(--red); color:#fff; box-shadow:0 4px 14px rgba(192,22,43,.35); } .pane { display:none; }
+.pane.on { display:block; animation:fadeUp .4s ease; } .port-hint { padding:13px 15px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); border-radius:12px; font-size:12px; color:rgba(255,255,255,.55); line-height:1.7; margin-bottom:16px;
+} .pcard { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:18px; margin-bottom:10px; transition:all .2s;
+}
+.pcard:hover { background:rgba(255,255,255,.08); border-color:rgba(184,151,90,.22); }
+.pcard-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px; }
+.pcard-name { font-size:14px; font-weight:600; color:#fff; margin-bottom:3px; line-height:1.4; }
+.pcard-type { font-size:11px; color:rgba(255,255,255,.35); }
+.pbadge { padding:4px 10px; border-radius:100px; font-size:10px; font-weight:700; }
+.pb-safe { background:rgba(46,204,113,.12); color:#5CE69E; border:1px solid rgba(46,204,113,.2); }
+.pb-bal { background:rgba(184,151,90,.15); color:var(--glt); border:1px solid rgba(184,151,90,.25); }
+.pb-grow { background:rgba(192,22,43,.18); color:#FF7080; border:1px solid rgba(192,22,43,.28); }
+.bar-lbl { display:flex; justify-content:space-between; font-size:10px; color:rgba(255,255,255,.4); margin-bottom:5px; }
+.bar-track { height:5px; background:rgba(255,255,255,.07); border-radius:3px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:3px; width:0; transition:width 1s cubic-bezier(.34,1.56,.64,1); }
+.bf-green { background:linear-gradient(90deg,#1DB954,#2ecc71); }
+.bf-gold { background:linear-gradient(90deg,var(--gold),var(--glt)); }
+.bf-red { background:linear-gradient(90deg,var(--red),var(--red-lt)); }
+.pchips { display:flex; gap:5px; flex-wrap:wrap; margin-top:12px; }
+.pchip { font-size:10px; padding:3px 9px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.07); border-radius:100px; color:rgba(255,255,255,.5);
+}
+.port-note { margin-top:14px; padding:13px 15px; text-align:center; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:10px; font-size:11px; color:rgba(255,255,255,.25); line-height:1.7;
+} /* ── 앱 사용법 ── */
+.app-steps { display:flex; flex-direction:column; gap:16px; }
+.app-step { display:flex; gap:14px; align-items:flex-start; opacity:0; transform:translateX(-10px); transition:all .5s ease;
+}
+.app-step.vis { opacity:1; transform:none; }
+.step-num { flex-shrink:0; width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,var(--red),#8C1020); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; box-shadow:0 4px 12px rgba(192,22,43,.28);
+}
+.step-ttl { font-size:14px; font-weight:600; color:var(--ink); margin-bottom:5px; }
+.step-desc { font-size:12px; color:var(--muted); line-height:1.7; }
+.step-tip { display:inline-block; margin-top:7px; padding:4px 10px; background:var(--bg2); border-radius:8px; font-size:11px; color:var(--ink);
+} /* 앱 다운로드 */
+.app-cta { background:var(--ink); border-radius:18px; padding:28px 24px; text-align:center; margin-top:28px; position:relative; overflow:hidden;
+}
+.app-cta::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(192,22,43,.32) 0%,transparent 70%);
+}
+.app-cta h3 { position:relative; font-family:'Playfair Display',serif; font-size:18px; color:#fff; font-weight:700; margin-bottom:7px;
+}
+.app-cta p { position:relative; font-size:13px; color:rgba(255,255,255,.4); margin-bottom:20px; }
+.app-btns { position:relative; display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+.app-btn { display:flex; align-items:center; gap:7px; padding:11px 18px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.11); border-radius:12px; color:#fff; text-decoration:none; font-size:13px; font-weight:500; transition:all .2s;
+}
+.app-btn:hover { background:rgba(255,255,255,.13); }
+.app-btn-icon { font-size:18px; } /* ── 퇴직연금 운영 카드 ── */
+.op-card { background:var(--white); border:1px solid var(--line); border-radius:16px; padding:22px; margin-bottom:14px; box-shadow:0 1px 6px rgba(0,0,0,.04);
+}
+.op-card-top { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.op-icon { font-size:26px; flex-shrink:0; }
+.op-title { font-size:15px; font-weight:700; color:var(--ink); }
+.op-desc { font-size:13px; color:var(--muted); line-height:1.8; margin-bottom:14px; }
+.op-desc strong { color:var(--ink); }
+.op-btns { display:flex; gap:8px; flex-wrap:wrap; }
+.op-btn { display:inline-flex; align-items:center; gap:6px; padding:9px 16px; background:var(--ink); color:#fff; border-radius:10px; font-size:12px; font-weight:600; text-decoration:none; transition:all .2s;
+}
+.op-btn:hover { background:var(--ink2); transform:translateY(-1px); } /* ── 콘텐츠 그리드 ── */
+.content-grid { display:grid; grid-template-columns:1fr; gap:12px;
+}
+.content-card { display:flex; flex-direction:column; gap:6px; background:var(--white); border:1px solid var(--line); border-radius:14px; padding:18px; text-decoration:none; color:var(--ink); box-shadow:0 1px 6px rgba(0,0,0,.04); transition:all .2s;
+}
+.content-card:hover { border-color:var(--red); transform:translateY(-2px); box-shadow:0 4px 16px rgba(0,0,0,.08); }
+.content-icon { font-size:24px; }
+.content-title { font-size:14px; font-weight:700; color:var(--ink); }
+.content-desc { font-size:12px; color:var(--muted); line-height:1.6; }
+.content-link { font-size:12px; color:var(--red); font-weight:600; margin-top:4px; } /* ── FAQ ── */
+.faq-list { display:flex; flex-direction:column; gap:10px; }
+.faq-item { background:var(--white); border:1px solid var(--line); border-radius:14px; overflow:hidden; cursor:pointer; transition:border-color .2s;
+}
+.faq-item:hover { border-color:var(--red); }
+.faq-q { display:flex; justify-content:space-between; align-items:center; padding:16px 18px; font-size:14px; font-weight:600; color:var(--ink);
+}
+.faq-arrow { font-size:16px; color:var(--muted); transition:transform .25s; flex-shrink:0; }
+.faq-item.open .faq-arrow { transform:rotate(180deg); }
+.faq-a { display:none; padding:0 18px 16px; font-size:13px; color:var(--muted); line-height:1.8; border-top:1px solid var(--line); padding-top:14px;
+}
+.faq-item.open .faq-a { display:block; animation:fadeUp .2s ease; } /* ── 문의 ── */
+.contact-card { background:var(--white); border:1px solid var(--line); border-radius:16px; padding:24px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.ct-av { width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,var(--red),#8C1020); display:flex; align-items:center; justify-content:center; font-size:22px; margin:0 auto 12px;
+}
+.ct-name { font-size:16px; font-weight:600; margin-bottom:3px; }
+.ct-role { font-size:12px; color:var(--muted); margin-bottom:16px; }
+.ct-infos { display:flex; flex-direction:column; gap:5px; margin-bottom:16px; }
+.ct-info { display:flex; align-items:center; justify-content:center; gap:6px; font-size:13px; }
+.ct-btn { display:inline-block; padding:12px 28px; background:var(--ink); color:#fff; border-radius:10px; font-size:14px; font-weight:600; text-decoration:none; transition:all .2s;
+}
+.ct-btn:hover { background:var(--ink2); transform:translateY(-1px); } /* ── Footer ── */
+footer { background:var(--ink); padding:36px 24px; text-align:center; border-top:1px solid rgba(255,255,255,.05);
+}
+.footer-logo { font-family:'Playfair Display',serif; font-size:17px; color:#fff; font-weight:700; margin-bottom:8px;
+}
+footer p { font-size:11px; color:rgba(255,255,255,.2); line-height:1.9; }
+</style>
+</head>
+<body> <!-- 홍보 인트로 -->
+<div class="promo-intro">
+  <div class="promo-intro-inner">
+    <div class="promo-badge">금감원 공시 2026년 1분기 기준</div>
+    <div class="promo-rank">DC · IRP 실적배당형 수익률</div>
+    <h1 class="promo-title">압도적 <span class="promo-rank-num">1위</span></h1>
+    <p class="promo-company">교보생명 퇴직연금을 소개합니다</p>
+    <div class="promo-period-row">
+      <span class="promo-period-chip">10년 1위</span>
+      <span class="promo-period-sep">·</span>
+      <span class="promo-period-chip">7년 1위</span>
+      <span class="promo-period-sep">·</span>
+      <span class="promo-period-chip">1년 1위</span>
+    </div>
+    <div class="promo-all-1">장기 · 중기 · 단기 수익률 모두 1위</div>
+    <div class="promo-stats">
+      <div class="promo-stat">
+        <div class="promo-stat-yr">10년</div>
+        <div class="promo-stat-num">6.76<span>%</span></div>
+      </div>
+      <div class="promo-stat-div"></div>
+      <div class="promo-stat">
+        <div class="promo-stat-yr">7년</div>
+        <div class="promo-stat-num">8.96<span>%</span></div>
+      </div>
+      <div class="promo-stat-div"></div>
+      <div class="promo-stat">
+        <div class="promo-stat-yr">1년</div>
+        <div class="promo-stat-num">14.13<span>%</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Nav -->
+<!-- 🔴 버그수정: onclick을 navTo()로 통일, window.scrollTo 충돌 제거 -->
+<nav class="nav"> <div class="nav-logo">환인제약<span class="logo-x">×</span><span class="logo-kyobo">교보생명</span></div> <div class="nav-links"> <button class="nav-btn" onclick="navTo('process')">이전절차</button> <button class="nav-btn" onclick="navTo('intro')">제도소개</button> <button class="nav-btn" onclick="navTo('portfolio')">추천 포트폴리오</button> <button class="nav-btn" onclick="navTo('app')">퇴직연금 운영</button> <button class="nav-btn" onclick="navTo('contents')">콘텐츠</button> <button class="nav-btn" onclick="navTo('faq')">FAQ</button> <button class="nav-btn" onclick="navTo('contact')">문의</button>
+    <button class="nav-btn" onclick="navTo('apply')" style="background:var(--red);color:#fff;border-radius:100px;">가입신청</button> </div>
+</nav>
+<!-- 이전 절차 -->
+<section id="process" style="padding:0;">
+  <!-- 토글 헤더 — 흰색 배경 -->
+  <div class="process-header">
+    <div class="process-toggle-row">
+      <button class="tf-btn on" id="btn-real" onclick="setTf('real')">실물이전</button>
+      <button class="tf-btn" id="btn-cash" onclick="setTf('cash')">현금이전</button>
+    </div>
+    <h2 id="proc-title" class="process-title">실물이전 진행 절차</h2>
+    <p class="sec-desc" id="proc-desc" style="text-align:center;margin-bottom:0;color:var(--muted);font-size:13px;">현재 운용 중인 상품을 그대로 유지하며 교보생명으로 이전합니다.</p>
+  </div>
+  <!-- 타임라인 영역 -->
+  <div class="process-body"> <!-- 실물이전 --> <div class="notice-box"> <div class="notice-icon">⚠️</div> <div class="notice-body"> <div class="notice-title">실물이전 불가 상품 안내</div> <div class="notice-text">아래 상품은 실물이전이 불가능하며, 현금이전으로 처리됩니다. <strong>디폴트 상품, 보험사 이율보증형 상품, ETF</strong> — ETF는 이전 신청 전 미리 매도해 두세요.</div> </div> </div> <div class="tl tl-section on" id="tl-real"> <div class="tl-item"> <div class="tl-dot">1</div> <div class="tl-card"> <div class="tl-day">D-day · 신청 완료</div> <div class="tl-title">이전 신청 접수 완료</div> </div> </div> <div class="tl-item"> <div class="tl-dot">2</div> <div class="tl-card"> <div class="tl-day">D+1~3 영업일</div> <div class="tl-title">우리은행에 계약 이전 신청</div> </div> </div> <div class="tl-item"> <div class="tl-dot">3</div> <div class="tl-card"> <div class="tl-day">D+2~4 영업일</div> <div class="tl-title">우리은행에서 이전 동의 확인</div> <div class="tl-desc">우리은행에서 문자 또는 전화로 이전 동의를 확인합니다.</div> </div> </div> <div class="tl-item"> <div class="tl-dot">4</div> <div class="tl-card"> <div class="tl-day">D+5~10 영업일</div> <div class="tl-title">보유 상품 실물 이전</div> <div class="tl-desc">보유 중인 상품을 종목 그대로 교보생명으로 이전합니다. 일부 원리금보장형 상품, ETF의 경우 실물이전이 불가능합니다.</div> </div> </div> <div class="tl-item"> <div class="tl-dot">5</div> <div class="tl-card"> <div class="tl-day">이전 완료</div> <div class="tl-title">교보생명으로 이전 완료</div> <div class="tl-desc">퇴직연금전문FP가 매칭되며, 온보딩 상담 진행을 위한 일정을 잡습니다.</div> </div> </div> </div> <!-- 현금이전 --> <div class="tl tl-section" id="tl-cash"> <div class="tl-item"> <div class="tl-dot">1</div> <div class="tl-card"> <div class="tl-day">D-day · 신청 완료</div> <div class="tl-title">이전 신청 접수 완료</div> </div> </div> <div class="tl-item"> <div class="tl-dot">2</div> <div class="tl-card"> <div class="tl-day">D+1~3 영업일</div> <div class="tl-title">우리은행에 계약 이전 신청</div> </div> </div> <div class="tl-item"> <div class="tl-dot">3</div> <div class="tl-card"> <div class="tl-day">D+2~4 영업일</div> <div class="tl-title">우리은행에서 이전 동의 확인</div> <div class="tl-desc">우리은행에서 문자 또는 전화로 이전 동의를 확인합니다.</div> </div> </div> <div class="tl-item"> <div class="tl-dot">4</div> <div class="tl-card"> <div class="tl-day">D+5~10 영업일</div> <div class="tl-title">보유 상품 현금 이전</div> <div class="tl-desc">보유 중인 상품을 전량 환매 후 현금으로 교보생명 계좌에 이전합니다. 환매 기간에는 운용 수익이 발생하지 않습니다.</div> </div> </div> <div class="tl-item"> <div class="tl-dot">5</div> <div class="tl-card"> <div class="tl-day">이전 완료</div> <div class="tl-title">교보생명으로 이전 완료</div> <div class="tl-desc">퇴직연금전문FP가 매칭되며, 온보딩 상담 진행을 위한 일정을 잡습니다.</div> </div> </div> </div> <div class="notice-box" style="background:#F0F7FF;border-color:#90C2F5;margin-top:16px;margin-left:26px;"> <div class="notice-icon">📅</div> <div class="notice-body"> <div class="notice-title" style="color:#1A4B8C;">분기별 상담 부스 운영</div> <div class="notice-text" style="color:#2A5BA0;">매분기 사내 상담 부스가 운영됩니다. 매칭된 퇴직연금전문FP와 함께 포트폴리오를 주기적으로 점검하세요!</div> </div>   </div>
+</section>
+
+<div class="divider"></div>
+<!-- 제도 소개 -->
+<section id="intro"> <div class="sec-tag">교보생명 소개</div> <h2>교보생명 퇴직연금,<br>무엇이 다른가요?</h2> <p class="sec-desc">대한민국 퇴직연금 1호 사업자, 교보생명의 차별화된 강점을 확인하세요.</p> <div class="info-grid"> <div class="info-card"> <div class="ic-icon">🏆</div> <div class="ic-title">2025 베스트 퇴직연금 최우수 사업자</div> <div class="ic-desc">고객을 직접 찾아가는 1:1 맞춤 컨설팅과 도입부터 운영까지 전 과정의 고객 맞춤형 서비스가 강점으로 선정되었습니다.</div> <div class="ic-badge">한국경제·한국MONEY 선정</div> </div> <div class="info-card"> <div class="ic-icon">📈</div> <div class="ic-title">DC·IRP 장기 수익률 1위</div> <div class="ic-desc">실적배당형 10년·7년·1년 수익률 모두 Top3 달성. 단기부터 장기까지 흔들림 없는 성과를 자랑합니다.</div> <div class="ic-badge">금감원 공시 2026 1분기 기준</div> </div> <div class="info-card"> <div class="ic-icon">🤖</div> <div class="ic-title">로보어드바이저(RA) 수익률 효과</div> <div class="ic-desc">RA 구독자의 1년 수익률 19.90% vs 미사용자 8.66%. 3년 누적으로는 44.40% vs 19.28%로 2배 이상 차이.</div> </div> <div class="info-card"> <div class="ic-icon">📱</div> <div class="ic-title">보험사 최초 ETF 매매 시스템</div> <div class="ic-desc">퇴직연금에서 투자 가능한 모든 ETF 제공. AI·반도체·전력·빅테크·헬스케어 등 국내외 전 섹터 투자 가능.</div> </div> <div class="info-card"> <div class="ic-icon">👤</div> <div class="ic-title">성과로 연결되는 1:1 컨설팅</div> <div class="ic-desc">1:1 투자관리를 꾸준히 받은 가입자의 연평균 수익률은 13.90%, 받지 않은 가입자는 6.19%.</div> </div> <div class="info-card"> <div class="ic-icon">🛡️</div> <div class="ic-title">세액공제 혜택</div> <div class="ic-desc">연간 최대 900만 원 납입 시 최대 148.5만 원 세액공제. 연말정산 전 납입으로 절세 효과를 극대화하세요.</div> <div class="ic-badge">최대 16.5% 공제</div> </div> </div>
+</section> <div class="divider"></div> <!-- 포트폴리오 -->
+<div class="port-section" id="portfolio"> <div class="port-inner"> <div class="sec-tag">추천 포트폴리오</div> <h2>투자성향별 포트폴리오</h2> <p class="sec-desc">투자 성향에 맞는 3가지 모델 포트폴리오를 골라보세요.</p> <div class="ptabs"> <button class="ptab on" onclick="showPane('safe',this)">안정형</button> <button class="ptab" onclick="showPane('balanced',this)">중립형</button> <button class="ptab" onclick="showPane('growth',this)">수익추구형</button> </div> <!-- 안정형 40/25/25/5/5 --> <div class="pane on" id="pane-safe"> <div class="port-hint">원금 보존을 최우선으로 합니다. 연평균 약 5.76% 수익을 목표로 합니다. (과거 5년 실적 기준)</div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">교보생명 이율보증형(GIC) 3년</div><div class="pcard-type">원리금 보장형</div></div> <span class="pbadge pb-safe">안전 40%</span> </div> <div class="bar-lbl"><span>비중</span><span>40%</span></div> <div class="bar-track"><div class="bar-fill bf-green" data-w="40"></div></div> <div class="pchips"><span class="pchip">원리금 보장</span><span class="pchip">연 3% 가정</span></div> </div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">신한마음편한 적격TDF 2035</div><div class="pcard-type">Core · TDF</div></div> <span class="pbadge pb-bal">핵심 25%</span> </div> <div class="bar-lbl"><span>비중</span><span>25%</span></div> <div class="bar-track"><div class="bar-fill bf-gold" data-w="25"></div></div> <div class="pchips"><span class="pchip">3년 수익률 50.38%</span><span class="pchip">총보수 0.473%</span></div> </div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">한화LIFEPLUS 적격TDF 2035</div><div class="pcard-type">Core · TDF</div></div> <span class="pbadge pb-bal">핵심 25%</span> </div> <div class="bar-lbl"><span>비중</span><span>25%</span></div> <div class="bar-track"><div class="bar-fill bf-gold" data-w="25"></div></div> <div class="pchips"><span class="pchip">3년 수익률 52.33%</span><span class="pchip">총보수 0.465%</span></div> </div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">KOSPI200 or 국내 업종 ETF</div><div class="pcard-type">Satellite · 국내주식</div></div> <span class="pbadge pb-grow">위성 5%</span> </div> <div class="bar-lbl"><span>비중</span><span>5%</span></div> <div class="bar-track"><div class="bar-fill bf-red" data-w="5"></div></div> <div class="pchips"><span class="pchip">KODEX 반도체</span><span class="pchip">PLUS 고배당주</span></div> </div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">미국나스닥100 or 해외 업종 ETF</div><div class="pcard-type">Satellite · 해외주식</div></div> <span class="pbadge pb-grow">위성 5%</span> </div> <div class="bar-lbl"><span>비중</span><span>5%</span></div> <div class="bar-track"><div class="bar-fill bf-red" data-w="5"></div></div> <div class="pchips"><span class="pchip">ACE 미국빅테크TOP7</span><span class="pchip">TIGER 미국테크TOP10</span></div> </div> </div> <!-- 중립형 20/30/30/10/10 --> <div class="pane" id="pane-balanced"> <div class="port-hint">안정성과 수익성의 균형을 추구합니다. 연평균 약 8.05% 수익을 목표로 합니다. (과거 5년 실적 기준)</div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">교보생명 이율보증형(GIC) 3년</div><div class="pcard-type">원리금 보장형</div></div> <span class="pbadge pb-safe">안전 20%</span> </div> <div class="bar-lbl"><span>비중</span><span>20%</span></div> <div class="bar-track"><div class="bar-fill bf-green" data-w="20"></div></div> <div class="pchips"><span class="pchip">원리금 보장</span><span class="pchip">안전 쿠션 역할</span></div> </div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">신한마음편한 적격TDF 2045</div><div class="pcard-type">Core · TDF</div></div> <span class="pbadge pb-bal">핵심 30%</span> </div> <div class="bar-lbl"><span>비중</span><span>30%</span></div> <div class="bar-track"><div class="bar-fill bf-gold" data-w="30"></div></div> <div class="pchips"><span class="pchip">3년 수익률 62.20%</span><span class="pchip">총보수 0.738%</span></div> </div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">한화LIFEPLUS 적격TDF 2045</div><div class="pcard-type">Core · TDF</div></div> <span class="pbadge pb-bal">핵심 30%</span> </div> <div class="bar-lbl"><span>비중</span><span>30%</span></div> <div class="bar-track"><div class="bar-fill bf-gold" data-w="30"></div></div> <div class="pchips"><span class="pchip">3년 수익률 66.68%</span><span class="pchip">총보수 0.715%</span></div> </div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">KOSPI200 or 국내 업종 ETF</div><div class="pcard-type">Satellite · 국내주식</div></div> <span class="pbadge pb-grow">위성 10%</span> </div> <div class="bar-lbl"><span>비중</span><span>10%</span></div> <div class="bar-track"><div class="bar-fill bf-red" data-w="10"></div></div> <div class="pchips"><span class="pchip">KODEX 반도체</span><span class="pchip">PLUS 고배당주</span></div> </div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">미국나스닥100 or 해외 업종 ETF</div><div class="pcard-type">Satellite · 해외주식</div></div> <span class="pbadge pb-grow">위성 10%</span> </div> <div class="bar-lbl"><span>비중</span><span>10%</span></div> <div class="bar-track"><div class="bar-fill bf-red" data-w="10"></div></div> <div class="pchips"><span class="pchip">ACE 미국빅테크TOP7</span><span class="pchip">TIGER Fn신재생에너지</span></div> </div> </div> <!-- 수익추구형 0/35/35/15/15 --> <div class="pane" id="pane-growth"> <div class="port-hint">장기 자본성장을 목표로 합니다. 연평균 약 14.15% 수익을 목표로 합니다. (과거 5년 실적 기준, 변동성 높음)</div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">신한마음편한 적격TDF 2055</div><div class="pcard-type">Core · TDF</div></div> <span class="pbadge pb-bal">핵심 35%</span> </div> <div class="bar-lbl"><span>비중</span><span>35%</span></div> <div class="bar-track"><div class="bar-fill bf-gold" data-w="35"></div></div> <div class="pchips"><span class="pchip">3년 수익률 67.50%</span><span class="pchip">총보수 0.740%</span></div> </div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">한화LIFEPLUS 적격TDF 2055</div><div class="pcard-type">Core · TDF</div></div> <span class="pbadge pb-bal">핵심 35%</span> </div> <div class="bar-lbl"><span>비중</span><span>35%</span></div> <div class="bar-track"><div class="bar-fill bf-gold" data-w="35"></div></div> <div class="pchips"><span class="pchip">3년 수익률 67.74%</span><span class="pchip">총보수 0.715%</span></div> </div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">KOSPI200 or 국내 업종 ETF</div><div class="pcard-type">Satellite · 국내주식</div></div> <span class="pbadge pb-grow">위성 15%</span> </div> <div class="bar-lbl"><span>비중</span><span>15%</span></div> <div class="bar-track"><div class="bar-fill bf-red" data-w="15"></div></div> <div class="pchips"><span class="pchip">KODEX 반도체</span><span class="pchip">TIGER K방산&우주</span><span class="pchip">SOL AI반도체소부장</span></div> </div> <div class="pcard"> <div class="pcard-top"> <div><div class="pcard-name">미국나스닥100 or 해외 업종 ETF</div><div class="pcard-type">Satellite · 해외주식</div></div> <span class="pbadge pb-grow">위성 15%</span> </div> <div class="bar-lbl"><span>비중</span><span>15%</span></div> <div class="bar-track"><div class="bar-fill bf-red" data-w="15"></div></div> <div class="pchips"><span class="pchip">ACE 미국빅테크TOP7</span><span class="pchip">TIGER 미국우주테크</span><span class="pchip">KODEX 미국AI반도체TOP10</span></div> </div> </div> <div class="port-note">※ 실제 운용은 퇴직연금전문FP와 상담 후 결정됩니다. 과거 수익률이 미래 수익을 보장하지 않습니다.</div> </div>
+</div> <!-- 앱 사용법 -->
+<section id="app"> <div class="sec-tag">퇴직연금 운영하기</div> <h2>이전 후, 이렇게<br>운용하시면 됩니다</h2> <!-- 카드 1: 교보생명 앱 --> <div class="op-card"> <div class="op-card-top"> <div class="op-icon">📱</div> <div class="op-title">교보생명 앱에서 모든 것이 가능합니다</div> </div> <div class="op-desc">운용 현황·수익률 실시간 조회, 리밸런싱, 추가납입, 로보어드바이저(RA) 구독까지 교보생명 앱 하나로 모두 처리하실 수 있습니다. RA 구독자 1년 수익률 <strong>19.90%</strong> vs 미사용자 <strong>8.66%</strong> — 앱으로 스마트하게 운용해 보세요.</div> <div class="op-btns"> <a href="https://apps.apple.com/kr/app/%EA%B5%90%EB%B3%B4%EC%83%9D%EB%AA%85-%EC%98%A4%EB%8A%98%EB%8F%84-%EA%B5%90%EB%B3%B4%EB%A1%9C%EB%B6%80%ED%84%B0/id1642268866" target="_blank" rel="noopener" class="op-btn">🍎 App Store</a> <a href="https://play.google.com/store/apps/details?id=com.kyobo.app" target="_blank" rel="noopener" class="op-btn">🤖 Google Play</a> </div> </div> <!-- 카드 2: 전담 FP + 분기 상담 --> <div class="op-card"> <div class="op-card-top"> <div class="op-icon">👤</div> <div class="op-title">전담 FP 1:1 매칭 & 분기 상담 부스</div> </div> <div class="op-desc">퇴직연금전문FP가 1:1로 매칭되어 운용을 함께 관리합니다. 매분기 사내 상담 부스가 운영됩니다. 포트폴리오 점검·리밸런싱·연금 설계 등 궁금한 것은 부스에서 바로 상담 받으세요.</div> <div class="op-btns"> </div> </div> <!-- 카드 3: 월간 투자가이드 --> <div class="op-card"> <div class="op-card-top"> <div class="op-icon">📋</div> <div class="op-title">월간 투자 가이드</div> </div> <div class="op-desc">매월 교보생명이 발행하는 퇴직연금 투자 가이드로 시장 동향과 추천 포트폴리오를 확인하세요.</div> <div class="op-btns"> <a href="https://resource.kyobo.com/dgt/web/contents/pdf/rp/RP_investment_guide.pdf" target="_blank" rel="noopener" class="op-btn">📄 월간 투자가이드 보기</a> </div> </div>
+</section> <div class="divider"></div> <!-- 퇴직연금 콘텐츠 -->
+<section id="contents"> <div class="sec-tag">퇴직연금 콘텐츠</div> <h2>알아두면 힘이 되는<br>퇴직연금 정보</h2> <p class="sec-desc">교보생명이 제공하는 투자·은퇴 콘텐츠로 더 스마트하게 운용하세요.</p> <div class="content-grid"> <a href="https://www.kyobo.com/dgt/web/pension/invest-information" target="_blank" rel="noopener" class="content-card"> <div class="content-icon">📊</div> <div class="content-title">투자·은퇴 리포트</div> <div class="content-desc">시장 동향 분석과 은퇴 설계 인사이트를 담은 전문 리포트</div> <div class="content-link">바로가기 →</div> </a> <a href="https://www.kyobo.com/dgt/web/pension/invest-cardnews" target="_blank" rel="noopener" class="content-card"> <div class="content-icon">🗞️</div> <div class="content-title">퇴직연금 카드뉴스</div> <div class="content-desc">복잡한 퇴직연금을 한눈에 이해하는 카드뉴스</div> <div class="content-link">바로가기 →</div> </a> <a href="https://www.youtube.com/@KyoboPension" target="_blank" rel="noopener" class="content-card"> <div class="content-icon">▶️</div> <div class="content-title">교보생명 퇴직연금 유튜브</div> <div class="content-desc">투자 전략, 시장 동향, 연금 활용법을 영상으로 쉽게 알아보세요</div> <div class="content-link">바로가기 →</div> </a> </div>
+</section> <div class="divider"></div> <!-- FAQ -->
+<section id="faq"> <div class="sec-tag">자주 묻는 질문</div> <h2>퇴직연금 FAQ</h2> <div class="faq-list"> <div class="faq-item" onclick="toggleFaq(this)"> <div class="faq-q"> <span>회사 납입 주기는 어떻게 되나요?</span> <span class="faq-arrow">▾</span> </div> <div class="faq-a">분기납으로, 매 분기 말일에 회사가 퇴직연금 계좌에 납입합니다. (3월·6월·9월·12월 말일)</div> </div> <div class="faq-item" onclick="toggleFaq(this)"> <div class="faq-q"> <span>중도인출이 가능한가요?</span> <span class="faq-arrow">▾</span> </div> <div class="faq-a">DC형은 법적으로 정해진 사유(주택구입, 장기요양, 파산 등)에 한해 중도인출이 가능합니다. 자세한 사유와 절차는 아래 안내를 확인하세요. <a href="https://lazyme.notion.site/DC-1b375e97d42280cd9f67f5e828988941?source=copy_link" target="_blank" rel="noopener" style="color:var(--red);font-weight:600;">DC형 중도인출 안내 보기 →</a></div> </div> <div class="faq-item" onclick="toggleFaq(this)"> <div class="faq-q"> <span>퇴직 시 어떻게 해야 하나요?</span> <span class="faq-arrow">▾</span> </div> <div class="faq-a">퇴직을 하게 되면 DC 계좌에 쌓여 있던 퇴직금이 IRP(개인형 퇴직연금) 계좌로 자동 이전됩니다. <strong>IRP 계좌를 미리 만들어 두셔야 합니다.</strong> 퇴직 전에 은행, 증권사, 보험사 중 한 곳에서 IRP 계좌를 개설해 두세요. 계좌가 없으면 퇴직금 수령이 지연될 수 있습니다. 교보생명 앱에서 바로 가입하시거나, 퇴직연금전문FP에게 문의하세요.</div> </div> <div class="faq-item" onclick="toggleFaq(this)"> <div class="faq-q"> <span>IRP에 추가납입을 하면 세액공제를 받을 수 있나요?</span> <span class="faq-arrow">▾</span> </div> <div class="faq-a">네, 가능합니다. IRP에 연간 최대 900만 원까지 추가납입하면 최대 148.5만 원(세율 16.5%)의 세액공제 혜택을 받을 수 있습니다. <a href="https://www.kyobo.com/dgt/web/pension/invest-cardnews/19002" target="_blank" rel="noopener" style="color:var(--red);font-weight:600;">IRP 세액공제 자세히 보기 →</a></div> </div> </div>
+</section> <div class="divider"></div> <!-- 문의 -->
+<section id="contact"> <div class="sec-tag">담당자 문의</div> <h2>궁금한 점이 있으시면<br>언제든 연락주세요</h2> <div class="contact-card"> <div class="ct-av">👤</div> <div class="ct-name">이규현 과장</div> <div class="ct-role">교보생명 퇴직연금 · 환인제약 전담</div> <div class="ct-infos"> <div class="ct-info">📱 010-9995-7988</div> </div> <a href="tel:01099957988" class="ct-btn">📞 지금 전화하기</a> </div>
+</section> <!-- 가입 신청 CTA -->
+<div class="promo-cta" id="apply">
+  <div class="promo-cta-inner">
+    <div class="promo-cta-badge">지금 바로 시작하세요</div>
+    <h2 class="promo-cta-title">
+      교보생명 퇴직연금으로<br>변경을 원하시나요?
+    </h2>
+    <p class="promo-cta-desc">
+      아래 버튼을 눌러 신청 양식을 작성해 주시면<br>
+      가입 안내 페이지와 함께 교보생명 퇴직연금 담당자가 연락드립니다.
+    </p>
+    <div class="promo-gift-row">
+      🎁 교보생명 퇴직연금에 가입하시면<br>투썸 커피·케잌, 피자, 치킨 중 원하는 선물을 드립니다
+    </div>
+    <a href="https://forms.gle/SNvdPHK1qiojps6W6"
+       class="promo-cta-btn" target="_blank" rel="noopener">
+      ✍️ 가입 신청하기
+    </a>
+  </div>
+</div>
+
+<script>
+function toggleFaq(el) {
+  el.classList.toggle('open');
+}
+
+const params    = new URLSearchParams(window.location.search);
+const pTransfer = params.get('transfer') || 'real';
+let curTf = pTransfer;
+setTf(curTf);
+
+/* 🔴 버그수정: navTo() — window.scrollTo 충돌 방지 */
+function navTo(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.pageYOffset - 60;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+function setTf(type) {
+  curTf = type;
+  const btnReal = document.getElementById('btn-real');
+  const btnCash = document.getElementById('btn-cash');
+  if (btnReal) btnReal.classList.toggle('on', type === 'real');
+  if (btnCash) btnCash.classList.toggle('on', type === 'cash');
+  const noticeBox = document.querySelector('.notice-box');
+
+  if (type === 'real') {
+    document.getElementById('proc-title').textContent = '실물이전 진행 절차';
+    document.getElementById('proc-desc').textContent  = '현재 운용 중인 상품을 그대로 유지하며 교보생명으로 이전합니다.';
+    if (noticeBox) noticeBox.style.display = 'flex';
+    document.getElementById('tl-real').classList.add('on');
+    document.getElementById('tl-cash').classList.remove('on');
+  } else {
+    document.getElementById('proc-title').textContent = '현금이전 진행 절차';
+    document.getElementById('proc-desc').textContent  = '보유 상품을 전량 환매 후 현금으로 교보생명 계좌에 이전합니다.';
+    if (noticeBox) noticeBox.style.display = 'none';
+    document.getElementById('tl-real').classList.remove('on');
+    document.getElementById('tl-cash').classList.add('on');
+  }
+  setTimeout(observe, 80);
+}
+
+/* 포트폴리오 탭 */
+function showPane(id, btn) {
+  document.querySelectorAll('.ptab').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.pane').forEach(p => {
+    p.classList.remove('on');
+    p.querySelectorAll('.bar-fill').forEach(b => { b.style.width = '0'; });
+  });
+  const pane = document.getElementById('pane-' + id);
+  pane.classList.add('on');
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      pane.querySelectorAll('.bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.w + '%';
+      });
+    });
+  });
+}
+
+/* IntersectionObserver — 스크롤 애니메이션 */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('vis'), i * 80);
+    }
+  });
+}, { threshold: 0.12 });
+
+function observe() {
+  document.querySelectorAll('.tl-item, .info-card, .app-step').forEach(el => io.observe(el));
+}
+observe();
+
+/* 초기 포트폴리오 바 애니메이션 */
+setTimeout(() => {
+  document.querySelectorAll('#pane-safe .bar-fill').forEach(bar => {
+    bar.style.width = bar.dataset.w + '%';
+  });
+}, 600);
+
+/* 네비 활성화 스크롤 추적 */
+const secIds = ['process', 'intro', 'portfolio', 'app', 'contents', 'faq', 'contact'];
+window.addEventListener('scroll', () => {
+  let cur = '';
+  secIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 80) cur = id;
+  });
+  document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', secIds[i] === cur);
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
