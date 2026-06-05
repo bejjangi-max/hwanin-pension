@@ -389,9 +389,49 @@ footer { background:var(--ink); padding:36px 24px; text-align:center; border-top
 .footer-logo { font-family:'Playfair Display',serif; font-size:17px; color:#fff; font-weight:700; margin-bottom:8px;
 }
 footer p { font-size:11px; color:rgba(255,255,255,.2); line-height:1.9; }
+
+/* ── 하단 고정 가입 신청 버튼 ── */
+.floating-apply {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--red);
+  color: #fff;
+  text-decoration: none;
+  padding: 15px 28px;
+  border-radius: 100px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  box-shadow: 0 6px 24px rgba(192,22,43,.45);
+  white-space: nowrap;
+  transition: opacity .3s, transform .3s;
+  letter-spacing: -.01em;
+}
+.floating-apply:hover {
+  background: #a50d22;
+  transform: translateX(-50%) translateY(-2px);
+}
+.floating-apply.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(12px);
+}
+
 </style>
 </head>
-<body> <!-- 홍보 인트로 -->
+<body>
+
+<!-- 하단 고정 가입 신청 버튼 -->
+<a href="https://forms.gle/SNvdPHK1qiojps6W6" class="floating-apply" id="floatingApply" target="_blank" rel="noopener">
+  ✍️ 가입 신청하기
+</a>
+ <!-- 홍보 인트로 -->
 <div class="promo-intro">
   <div class="promo-intro-inner">
     <div class="promo-badge">금감원 공시 2026년 1분기 기준</div>
@@ -573,6 +613,14 @@ window.addEventListener('scroll', () => {
   document.querySelectorAll('.nav-btn').forEach((btn, i) => {
     btn.classList.toggle('active', secIds[i] === cur);
   });
+
+  /* 하단 고정 버튼: CTA 섹션(#apply)에 닿으면 숨기기 */
+  const applyBtn = document.getElementById('floatingApply');
+  const ctaSection = document.getElementById('apply');
+  if (applyBtn && ctaSection) {
+    const ctaTop = ctaSection.getBoundingClientRect().top;
+    applyBtn.classList.toggle('hidden', ctaTop <= window.innerHeight);
+  }
 }, { passive: true });
 </script>
 </body>
