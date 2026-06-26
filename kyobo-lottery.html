@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>교보생명 퇴직연금 × 행운의 복권</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/*
+════════════════════════════════════════
+  Google Apps Script 설정 방법
+════════════════════════════════════════
+  1. 구글 스프레드시트 열기 → 확장 프로그램 → Apps Script
+  2. 아래 코드를 붙여넣고 저장:
+
+  const SHEET_NAME = "이벤트참여자";
+
+  function doPost(e) {
+    const ss    = SpreadsheetApp.getActiveSpreadsheet();
+    let   sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet) {
+      sheet = ss.insertSheet(SHEET_NAME);
+      const hdr = sheet.getRange(1,1,1,5);
+      hdr.setValues([["타임스탬프","이름","전화번호","근무지","만족도","이전의사","당첨등수"]]);
+      hdr.setBackground("#1a1a2e").setFontColor("#fff").setFontWeight("bold");
+      sheet.setFrozenRows(1);
+    }
+    const d = e.parameter;
+    sheet.appendRow([
+      new Date().toLocaleString("ko-KR",{timeZone:"Asia/Seoul"}),
+      d.name, d.phone, d.workplace, d.satisfaction, d.transfer, d.prize
+    ]);
+    return ContentService
+      .createTextOutput(JSON.stringify({result:"ok"}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  function doGet() { return ContentService.createTextOutput("OK"); }
+
+  3. 배포 → 새 배포 → 웹 앱
+     실행 계정: 나 / 액세스: 모든 사용자
+  4. URL → 아래 SCRIPT_URL 에 붙여넣기
+════════════════════════════════════════
+*/
+
+/* ══ 리셋 & 변수 ══ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --ink:    #0D0B10;
+  --red:    #C0162B;
+  --gold:   #D4AF7A;
+  --green:  #1A9E5C;
+  --silver: #9BA3B0;
+  --bg:     #F7F5F2;
+  --white:  #FFFFFF;
+  --muted:  #8A847C;
+  --line:   #E8E0D4;
+}
+html, body {
+  height: 100%;
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ══ 화면 전환 ══ */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ══ ① 인트로 화면 ══ */
+#screen-intro {
+  background: var(--ink);
+  align-items: center; justify-content: center;
+  text-align: center; padding: 40px 28px;
+  position: relative; overflow: hidden;
+}
+#screen-intro::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(192,22,43,.5) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 80% 100%, rgba(212,175,122,.08) 0%, transparent 55%);
+}
+.intro-inner { position: relative; z-index: 1; max-width: 360px; width: 100%; }
+.intro-badge {
+  display: inline-block;
+  background: rgba(212,175,122,.15); border: 1px solid rgba(212,175,122,.35);
+  border-radius: 100px; padding: 6px 18px;
+  font-size: 11px; letter-spacing: .12em; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 28px;
+}
+.intro-ticket {
+  width: 200px; height: 200px; margin: 0 auto 28px;
+  background: linear-gradient(135deg, var(--gold), #B8975A);
+  border-radius: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 80px;
+  box-shadow: 0 20px 60px rgba(192,22,43,.3), 0 0 0 8px rgba(212,175,122,.15);
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50%       { transform: translateY(-10px) rotate(2deg); }
+}
+.intro-title {
+  font-size: 26px; font-weight: 900; color: #fff;
+  line-height: 1.2; letter-spacing: -.02em; margin-bottom: 10px;
+}
+.intro-title span { color: var(--gold); }
+.intro-sub {
+  font-size: 13px; color: rgba(255,255,255,.45);
+  line-height: 1.8; margin-bottom: 8px;
+}
+.intro-prizes {
+  display: flex; flex-direction: column; gap: 8px;
+  margin: 20px 0 32px;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px; padding: 18px;
+}
+.prize-row {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; padding: 4px 0;
+}
+.prize-rank {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.rank-1 { background: var(--gold); color: var(--ink); }
+.rank-2 { background: var(--silver); color: var(--ink); }
+.rank-3 { background: #CD7F32; color: #fff; }
+.prize-name { flex: 1; color: rgba(255,255,255,.8); text-align: left; margin-left: 10px; font-size: 12px; }
+.prize-cnt { color: rgba(255,255,255,.35); font-size: 11px; }
+.intro-note { font-size: 11px; color: rgba(255,255,255,.25); margin-bottom: 32px; line-height: 1.6; }
+.btn-primary {
+  display: block; width: 100%; padding: 17px;
+  background: var(--red); color: #fff;
+  border: none; border-radius: 14px;
+  font-size: 16px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer; transition: all .2s;
+  letter-spacing: -.01em;
+}
+.btn-primary:hover { background: #a50d22; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(192,22,43,.4); }
+.btn-primary:active { transform: none; }
+
+/* ══ ② 정보 입력 화면 ══ */
+#screen-form {
+  background: var(--bg);
+  align-items: center; padding: 0;
+}
+.form-header {
+  background: var(--ink); width: 100%;
+  padding: 48px 24px 28px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.form-header::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 80% at 50% 0%, rgba(192,22,43,.4) 0%, transparent 65%);
+}
+.form-header h2 {
+  position: relative;
+  font-size: 20px; font-weight: 700; color: #fff;
+  letter-spacing: -.02em; line-height: 1.3;
+}
+.form-header p {
+  position: relative;
+  font-size: 12px; color: rgba(255,255,255,.4); margin-top: 6px;
+}
+.form-body {
+  width: 100%; max-width: 480px; padding: 28px 20px 40px;
+  display: flex; flex-direction: column; gap: 0;
+}
+.field-wrap {
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: 16px; overflow: hidden; margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+.field {
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--line);
+  transition: background .2s;
+}
+.field:last-child { border-bottom: none; }
+.field:focus-within { background: #FEFCF9; }
+.field label {
+  display: block; font-size: 10px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+  font-weight: 600; margin-bottom: 5px;
+}
+.field label .req { color: var(--red); }
+.field input {
+  width: 100%; border: none; outline: none; background: transparent;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 16px; color: var(--ink); font-weight: 400;
+}
+.field input::placeholder { color: rgba(0,0,0,.2); }
+.ferr { font-size: 11px; color: var(--red); padding: 6px 18px 0; display: none; }
+.ferr.on { display: block; }
+.consent-wrap {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: 14px; padding: 14px 16px;
+  margin-bottom: 24px; cursor: pointer;
+}
+.consent-chk {
+  width: 18px; height: 18px; border-radius: 5px;
+  border: 1.5px solid var(--line); flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--white); transition: all .2s;
+}
+.consent-chk.on { background: var(--ink); border-color: var(--ink); }
+.consent-chk.on::after { content: '✓'; font-size: 10px; color: #fff; font-weight: 700; }
+.consent-txt { font-size: 12px; color: var(--muted); line-height: 1.7; }
+.consent-err { font-size: 11px; color: var(--red); margin: -18px 0 16px; display: none; }
+.consent-err.on { display: block; }
+
+/* ══ ③ 스크래치 화면 ══ */
+#screen-scratch {
+  background: var(--ink);
+  align-items: center; justify-content: center;
+  text-align: center; padding: 40px 24px;
+  position: relative; overflow: hidden;
+}
+#screen-scratch::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(192,22,43,.3) 0%, transparent 60%);
+}
+.scratch-inner { position: relative; z-index: 1; max-width: 360px; width: 100%; }
+.scratch-label {
+  font-size: 13px; color: rgba(255,255,255,.45);
+  letter-spacing: .06em; margin-bottom: 20px;
+}
+.scratch-name {
+  font-size: 18px; font-weight: 700; color: var(--gold);
+  margin-bottom: 28px;
+}
+.scratch-ticket {
+  position: relative; width: 280px; margin: 0 auto 24px;
+  border-radius: 20px; overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0,0,0,.4);
+}
+.scratch-bg {
+  width: 100%; aspect-ratio: 3/2;
+  background: linear-gradient(135deg, #1A1A2E, #16213E);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.scratch-result {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; transition: opacity .5s;
+}
+.scratch-result.show { opacity: 1; }
+.result-emoji { font-size: 48px; }
+.result-rank {
+  font-size: 20px; font-weight: 900; letter-spacing: -.01em;
+}
+.result-item { font-size: 13px; color: rgba(255,255,255,.65); }
+
+/* 스크래치 캔버스 */
+#scratchCanvas {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  border-radius: 0;
+  cursor: crosshair;
+  touch-action: none;
+}
+.scratch-hint {
+  font-size: 12px; color: rgba(255,255,255,.3);
+  margin-bottom: 16px; letter-spacing: .04em;
+}
+.scratch-progress-wrap {
+  background: rgba(255,255,255,.08); border-radius: 100px;
+  height: 4px; width: 200px; margin: 0 auto 24px; overflow: hidden;
+}
+.scratch-progress-bar {
+  height: 100%; background: var(--gold);
+  border-radius: 100px; width: 0%;
+  transition: width .2s;
+}
+
+/* ══ ④ 결과 화면 ══ */
+#screen-result {
+  background: var(--ink);
+  align-items: center; justify-content: center;
+  text-align: center; padding: 40px 24px;
+  position: relative; overflow: hidden;
+}
+.result-inner { position: relative; z-index: 1; max-width: 360px; width: 100%; }
+.result-confetti { font-size: 48px; margin-bottom: 16px; animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes popIn { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.result-rank-badge {
+  display: inline-block; padding: 8px 24px;
+  border-radius: 100px; font-size: 14px; font-weight: 700;
+  letter-spacing: .04em; margin-bottom: 16px;
+}
+.badge-1 { background: var(--gold); color: var(--ink); }
+.badge-2 { background: var(--silver); color: var(--ink); }
+.badge-3 { background: #CD7F32; color: #fff; }
+.result-prize-name {
+  font-size: 22px; font-weight: 900; color: #fff;
+  line-height: 1.3; letter-spacing: -.02em; margin-bottom: 8px;
+}
+.result-prize-desc {
+  font-size: 13px; color: rgba(255,255,255,.45); margin-bottom: 32px; line-height: 1.7;
+}
+.result-notice {
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px; padding: 18px; margin-bottom: 24px;
+  font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.8; text-align: left;
+}
+.result-notice strong { color: rgba(255,255,255,.85); display: block; margin-bottom: 4px; font-size: 14px; }
+.result-promo-btn {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%;
+  padding: 16px 18px;
+  background: var(--red);
+  border: none;
+  border-radius: 14px;
+  color: #fff; text-decoration: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  margin-bottom: 16px;
+  transition: all .2s;
+  box-shadow: 0 6px 20px rgba(192,22,43,.35);
+  position: relative;
+}
+.result-promo-btn:hover { background: #a50d22; transform: translateY(-2px); box-shadow: 0 10px 28px rgba(192,22,43,.45); }
+.result-promo-btn:active { transform: translateY(0); }
+.result-promo-icon { font-size: 22px; flex-shrink: 0; }
+.result-promo-text { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; flex: 1; }
+.result-promo-label { font-size: 14px; font-weight: 700; }
+.result-promo-sub { font-size: 11px; color: rgba(255,255,255,.65); letter-spacing: .02em; }
+/* 외부링크 아이콘 */
+.result-promo-btn::after {
+  content: '';
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  background: rgba(255,255,255,.25);
+  border-radius: 6px;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3Cpolyline points='15 3 21 3 21 9'/%3E%3Cline x1='10' y1='14' x2='21' y2='3'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/%3E%3Cpolyline points='15 3 21 3 21 9'/%3E%3Cline x1='10' y1='14' x2='21' y2='3'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+.result-contact {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(212,175,122,.3);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-top: 4px;
+  text-align: center;
+}
+.result-contact-label {
+  font-size: 14px; letter-spacing: .02em;
+  color: var(--gold); font-weight: 600; margin-bottom: 8px;
+}
+.result-contact-name {
+  font-size: 14px; font-weight: 600; color: rgba(255,255,255,.85); margin-bottom: 10px;
+}
+.result-contact-phone {
+  display: inline-block;
+  padding: 9px 22px;
+  background: var(--gold); color: var(--ink);
+  border-radius: 100px; font-size: 14px; font-weight: 700;
+  text-decoration: none; transition: all .2s;
+}
+.result-contact-phone:hover { background: #C9A84C; }
+
+.result-share {
+  font-size: 11px; color: rgba(255,255,255,.2); margin-top: 12px;
+}
+
+/* ══ 공통 버튼 ══ */
+.btn-gold {
+  display: block; width: 100%; padding: 17px;
+  background: var(--gold); color: var(--ink);
+  border: none; border-radius: 14px;
+  font-size: 16px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer; transition: all .2s;
+  letter-spacing: -.01em;
+  box-shadow: 0 6px 20px rgba(212,175,122,.3);
+}
+.btn-gold:hover { background: #C9A84C; transform: translateY(-1px); }
+
+
+/* ══ 설문 카드 ══ */
+.survey-card {
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: 16px; padding: 18px 18px 14px;
+  margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+.survey-title {
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  margin-bottom: 14px; line-height: 1.4;
+}
+.star-row {
+  display: flex; justify-content: center; gap: 8px; margin-bottom: 8px;
+}
+.star-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 32px; color: #E0D9CF;
+  transition: transform .15s, color .15s;
+  line-height: 1;
+}
+.star-btn.on { color: #F5A623; }
+.star-btn:active { transform: scale(1.3); }
+.star-labels {
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: var(--muted); letter-spacing: .04em; padding: 0 4px;
+}
+.yn-row { display: flex; gap: 10px; }
+.yn-btn {
+  flex: 1; padding: 12px;
+  background: var(--bg); border: 1.5px solid var(--line);
+  border-radius: 12px; font-size: 15px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer; transition: all .2s; color: var(--ink);
+}
+.yn-btn.on-yes { background: #EAF7EE; border-color: #1A9E5C; color: #1A9E5C; }
+.yn-btn.on-no  { background: #FFF0F2; border-color: var(--red); color: var(--red); }
+
+/* ══ 파티클 ══ */
+.particles { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
+.particle {
+  position: absolute; width: 8px; height: 8px; border-radius: 50%;
+  animation: particleFall 2s ease-in forwards;
+}
+@keyframes particleFall {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- 파티클 컨테이너 -->
+<div class="particles" id="particles"></div>
+
+<!-- ══════════════════════════════════════
+  ① 인트로 화면
+══════════════════════════════════════ -->
+<div class="screen active" id="screen-intro">
+  <div class="intro-inner">
+    <div class="intro-badge">교보생명 퇴직연금 × 행운 이벤트</div>
+    <div class="intro-ticket">🎟️</div>
+    <h1 class="intro-title">행운의 복권을<br><span>긁어보세요</span></h1>
+    <p class="intro-sub">참여만 해도 100% 당첨!<br>총 200개의 선물이 여러분을 기다립니다</p>
+
+    <div class="intro-prizes">
+      <div class="prize-row">
+        <span class="prize-rank rank-1">1</span>
+        <span class="prize-name">이솝 바디워시 + 핸드크림 세트</span>
+      </div>
+      <div class="prize-row">
+        <span class="prize-rank rank-2">2</span>
+        <span class="prize-name">닥터브로너스 바디솝</span>
+      </div>
+      <div class="prize-row">
+        <span class="prize-rank rank-3">3</span>
+        <span class="prize-name">맥리듬 아이마스크</span>
+      </div>
+    </div>
+
+    <p class="intro-note">당첨 상품은 7~8월 중 담당자가 직접 연락하여 전달해 드립니다.</p>
+    <button class="btn-primary" onclick="goTo('screen-form')">참여하기 →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  ② 정보 입력 화면
+══════════════════════════════════════ -->
+<div class="screen" id="screen-form">
+  <div class="form-header">
+    <h2>정보를 입력하고<br>복권을 받으세요</h2>
+    <p>당첨 선물 전달을 위해 필요합니다</p>
+  </div>
+
+  <div class="form-body">
+    <div class="field-wrap">
+      <div class="field" id="f-name">
+        <label>이름 <span class="req">*</span></label>
+        <input type="text" id="inp-name" placeholder="홍길동" autocomplete="name">
+      </div>
+      <div class="field" id="f-phone">
+        <label>휴대폰 번호 <span class="req">*</span></label>
+        <input type="tel" id="inp-phone" placeholder="010-0000-0000" maxlength="13">
+      </div>
+      <div class="field" id="f-workplace">
+        <label>근무지 <span class="req">*</span></label>
+<input type="text" id="inp-workplace" placeholder="예) 서울, 광주, 부산, 대구 등">
+      </div>
+    </div>
+    <div class="ferr" id="ferr-main">모든 항목을 입력해 주세요.</div>
+
+    <!-- 만족도 -->
+    <div class="survey-card">
+      <div class="survey-title">오늘 투자설명회 만족도는?</div>
+      <div class="star-row" id="star-row">
+        <button class="star-btn" onclick="setStar(1)" data-v="1">★</button>
+        <button class="star-btn" onclick="setStar(2)" data-v="2">★</button>
+        <button class="star-btn" onclick="setStar(3)" data-v="3">★</button>
+        <button class="star-btn" onclick="setStar(4)" data-v="4">★</button>
+        <button class="star-btn" onclick="setStar(5)" data-v="5">★</button>
+      </div>
+      <div class="star-labels"><span>별로예요</span><span>매우 좋아요</span></div>
+    </div>
+
+    <!-- 이전 의사 -->
+    <div class="survey-card">
+      <div class="survey-title">교보생명으로 이전 의사가 있으신가요?</div>
+      <div class="yn-row">
+        <button class="yn-btn" id="yn-yes" onclick="setYN('YES')">👍 YES</button>
+        <button class="yn-btn" id="yn-no"  onclick="setYN('NO')">🤔 NO</button>
+      </div>
+    </div>
+
+    <div class="consent-wrap" onclick="toggleConsent()">
+      <div class="consent-chk" id="consent-chk"></div>
+      <div class="consent-txt">
+        이벤트 참여 및 선물 전달을 위해 이름·연락처·근무지를 수집합니다. 이벤트 종료 후 파기됩니다.
+      </div>
+    </div>
+    <div class="consent-err" id="consent-err">개인정보 수집에 동의해 주세요.</div>
+
+    <button class="btn-primary" onclick="submitForm()">복권 긁기 🎟️</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  ③ 스크래치 화면
+══════════════════════════════════════ -->
+<div class="screen" id="screen-scratch">
+  <div class="scratch-inner">
+    <div class="scratch-label">🎉 복권이 도착했습니다</div>
+    <div class="scratch-name" id="scratch-name">홍길동 님의 복권</div>
+
+    <div class="scratch-ticket">
+      <div class="scratch-bg">
+        <div class="scratch-result" id="scratch-result">
+          <div class="result-emoji" id="res-emoji">🎁</div>
+          <div class="result-rank" id="res-rank"></div>
+          <div class="result-item" id="res-item"></div>
+        </div>
+        <canvas id="scratchCanvas"></canvas>
+      </div>
+    </div>
+
+    <p class="scratch-hint">손가락으로 긁어보세요</p>
+    <div class="scratch-progress-wrap">
+      <div class="scratch-progress-bar" id="scratch-progress"></div>
+    </div>
+    <button class="btn-gold" id="btn-reveal" style="opacity:0;pointer-events:none;" onclick="revealResult()">결과 확인하기</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+  ④ 결과 화면
+══════════════════════════════════════ -->
+<div class="screen" id="screen-result">
+  <div class="result-inner">
+    <div class="result-confetti" id="result-emoji-big">🎁</div>
+    <div class="result-rank-badge" id="result-badge">3등</div>
+    <div class="result-prize-name" id="result-prize-name">맥리듬 아이마스크</div>
+    
+
+    <div class="result-notice">
+      <strong>📦 상품 전달 안내</strong>
+      2025년 7~8월 중 교보생명 담당자가 등록하신 연락처로 직접 연락하여 선물을 전달해 드립니다.
+    </div>
+
+    <a href="https://bejjangi-max.github.io/hwanin-pension/hwanin-promo.html"
+       target="_blank" rel="noopener" class="result-promo-btn">
+      <span class="result-promo-icon">📄</span>
+      <span class="result-promo-text">
+        <span class="result-promo-label">교보생명 퇴직연금 자세히 알아보기</span>
+      </span>
+    </a>
+    <div class="result-contact">
+      <div class="result-contact-label">담당자 문의</div>
+      <div class="result-contact-name">교보생명 퇴직연금 이규현 과장</div>
+      <a href="tel:01099957988" class="result-contact-phone">📞 010-9995-7988</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ 설정 ══════════════════════════════════════════════════════
+// ★ Google Apps Script 배포 URL 입력
+const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+
+// 당첨 확률 설정 (총 200명 기준)
+const PRIZES = [
+  { rank: 1, cnt: 10,  emoji: "🏆", name: "이솝 세트",         full: "이솝 바디워시 + 핸드크림 세트",  badge: "badge-1", label: "1등" },
+  { rank: 2, cnt: 20,  emoji: "🥈", name: "닥터브로너스 바디솝", full: "닥터브로너스 퓨어캐스틸 바디솝",  badge: "badge-2", label: "2등" },
+  { rank: 3, cnt: 170, emoji: "🎁", name: "맥리듬 아이마스크",  full: "맥리듬 스팀 아이마스크",          badge: "badge-3", label: "3등" },
+];
+
+// 당첨 결정은 서버(Apps Script)에서 수행
+
+// ══ 상태 ══
+let agreed       = false;
+let myPrize      = null;
+let userName     = '';
+let scratchPct   = 0;
+let revealed     = false;
+let satisfaction = 0;
+let transferYN   = '';
+
+// ══ 화면 전환 ══
+function goTo(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ══ 만족도 ══
+function setStar(v) {
+  satisfaction = v;
+  document.querySelectorAll('.star-btn').forEach(btn => {
+    btn.classList.toggle('on', parseInt(btn.dataset.v) <= v);
+  });
+}
+
+// ══ 이전 의사 ══
+function setYN(v) {
+  transferYN = v;
+  document.getElementById('yn-yes').className = 'yn-btn' + (v==='YES' ? ' on-yes' : '');
+  document.getElementById('yn-no').className  = 'yn-btn' + (v==='NO'  ? ' on-no'  : '');
+}
+
+// ══ 개인정보 동의 ══
+function toggleConsent() {
+  agreed = !agreed;
+  document.getElementById('consent-chk').classList.toggle('on', agreed);
+}
+
+// ══ 전화번호 자동 하이픈 ══
+document.getElementById('inp-phone').addEventListener('input', function() {
+  const v = this.value.replace(/\D/g,'').slice(0,11);
+  if      (v.length <= 3) this.value = v;
+  else if (v.length <= 7) this.value = v.slice(0,3)+'-'+v.slice(3);
+  else                    this.value = v.slice(0,3)+'-'+v.slice(3,7)+'-'+v.slice(7);
+});
+
+// ══ 폼 제출 ══
+async function submitForm() {
+  const name      = document.getElementById('inp-name').value.trim();
+  const phone     = document.getElementById('inp-phone').value.trim();
+  const workplace = document.getElementById('inp-workplace').value.trim();
+
+  const mainErr    = document.getElementById('ferr-main');
+  const consentErr = document.getElementById('consent-err');
+
+  let ok = true;
+  if (!name || phone.replace(/\D/g,'').length < 10 || !workplace) {
+    mainErr.classList.add('on'); ok = false;
+  } else { mainErr.classList.remove('on'); }
+  if (!agreed) { consentErr.classList.add('on'); ok = false; }
+  else          { consentErr.classList.remove('on'); }
+  if (!ok) return;
+
+  userName = name;
+
+  // 로딩 상태
+  const btn = document.querySelector('#screen-form .btn-primary');
+  btn.disabled = true;
+  btn.textContent = '⏳ 복권 뽑는 중...';
+
+  try {
+    let prizeLabel = '3등'; // 기본값 (URL 미설정 시 테스트용)
+
+    if (!SCRIPT_URL.startsWith('YOUR')) {
+      // 서버에서 당첨 결정 + 저장
+      // no-cors → 응답 읽기 불가 → cors 모드로 전환 시도
+      const params = new URLSearchParams({
+        name, phone, workplace,
+        satisfaction: satisfaction + '점',
+        transfer: transferYN
+      });
+      try {
+        // cors 모드 먼저 시도 (Apps Script 배포 URL은 CORS 지원)
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params.toString()
+        });
+        const data = await res.json();
+        if (data.prize) prizeLabel = data.prize;
+      } catch(corsErr) {
+        // cors 실패 시 no-cors 폴백 (당첨은 클라이언트 확률로)
+        await fetch(SCRIPT_URL, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params.toString()
+        });
+        // 클라이언트 확률 추첨 (서버 응답 불가 시 폴백)
+        const rand = Math.random() * 200;
+        prizeLabel = rand < 10 ? '1등' : rand < 30 ? '2등' : '3등';
+      }
+    } else {
+      // 테스트 모드: 클라이언트 확률
+      const rand = Math.random() * 200;
+      prizeLabel = rand < 10 ? '1등' : rand < 30 ? '2등' : '3등';
+    }
+
+    // 당첨 객체 찾기
+    myPrize = PRIZES.find(p => p.label === prizeLabel) || PRIZES[2];
+
+  } catch(err) {
+    console.warn('서버 오류, 클라이언트 추첨 사용:', err);
+    const rand = Math.random() * 200;
+    myPrize = rand < 10 ? PRIZES[0] : rand < 30 ? PRIZES[1] : PRIZES[2];
+  }
+
+  // 스크래치 화면 준비
+  document.getElementById('scratch-name').textContent = name + ' 님의 복권';
+  document.getElementById('res-emoji').textContent    = myPrize.emoji;
+  document.getElementById('res-rank').textContent     = myPrize.label;
+  document.getElementById('res-rank').style.color     =
+    myPrize.rank === 1 ? '#D4AF7A' : myPrize.rank === 2 ? '#9BA3B0' : '#CD7F32';
+  document.getElementById('res-item').textContent     = myPrize.name;
+
+  btn.disabled = false;
+  btn.textContent = '복권 긁기 🎟️';
+  goTo('screen-scratch');
+  initScratch();
+}
+
+// ══ 스크래치 캔버스 ══
+function initScratch() {
+  revealed   = false;
+  scratchPct = 0;
+
+  const canvas  = document.getElementById('scratchCanvas');
+  const bg      = canvas.parentElement;
+  const W = bg.offsetWidth;
+  const H = bg.offsetHeight;
+  canvas.width  = W;
+  canvas.height = H;
+
+  const ctx = canvas.getContext('2d');
+
+  // 스크래치 레이어 그리기 (금박 느낌)
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0,   '#C9A84C');
+  grad.addColorStop(0.5, '#E8C96A');
+  grad.addColorStop(1,   '#B8975A');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // 텍스트
+  ctx.font = `bold ${W*0.055}px 'Noto Sans KR', sans-serif`;
+  ctx.fillStyle = 'rgba(0,0,0,.25)';
+  ctx.textAlign = 'center';
+  ctx.fillText('✦ 긁어서 확인 ✦', W/2, H/2 - 8);
+  ctx.font = `${W*0.038}px 'Noto Sans KR', sans-serif`;
+  ctx.fillText('KYOBO PENSION', W/2, H/2 + 18);
+
+  ctx.globalCompositeOperation = 'destination-out';
+
+  let painting = false;
+  let lastX = 0, lastY = 0;
+
+  function getPos(e, canvas) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width  / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const src = e.touches ? e.touches[0] : e;
+    return {
+      x: (src.clientX - rect.left) * scaleX,
+      y: (src.clientY - rect.top)  * scaleY,
+    };
+  }
+
+  function scratch(x, y) {
+    ctx.beginPath();
+    ctx.arc(x, y, 28, 0, Math.PI * 2);
+    ctx.fill();
+    updateProgress(ctx, W, H);
+  }
+
+  function onStart(e) { e.preventDefault(); painting = true; const p = getPos(e,canvas); lastX=p.x; lastY=p.y; scratch(p.x,p.y); }
+  function onMove(e)  { if (!painting) return; e.preventDefault(); const p = getPos(e,canvas); scratch(p.x,p.y); lastX=p.x; lastY=p.y; }
+  function onEnd()    { painting = false; }
+
+  canvas.addEventListener('mousedown', onStart);
+  canvas.addEventListener('mousemove', onMove);
+  canvas.addEventListener('mouseup',   onEnd);
+  canvas.addEventListener('touchstart', onStart, { passive: false });
+  canvas.addEventListener('touchmove',  onMove,  { passive: false });
+  canvas.addEventListener('touchend',   onEnd);
+
+  // 결과 미리 보임
+  document.getElementById('scratch-result').classList.add('show');
+}
+
+function updateProgress(ctx, W, H) {
+  const imageData = ctx.getImageData(0, 0, W, H).data;
+  let cleared = 0;
+  for (let i = 3; i < imageData.length; i += 4) {
+    if (imageData[i] < 128) cleared++;
+  }
+  const total = W * H;
+  scratchPct = Math.round((cleared / total) * 100);
+  document.getElementById('scratch-progress').style.width = Math.min(scratchPct, 100) + '%';
+
+  if (scratchPct >= 40 && !revealed) {
+    const btn = document.getElementById('btn-reveal');
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+    // 70% 이상이면 자동 이동
+    if (scratchPct >= 70) autoReveal();
+  }
+}
+
+let autoRevealTimer = null;
+function autoReveal() {
+  if (revealed) return;
+  if (!autoRevealTimer) autoRevealTimer = setTimeout(revealResult, 600);
+}
+
+function revealResult() {
+  if (revealed) return;
+  revealed = true;
+
+  // 결과 화면 세팅
+  document.getElementById('result-emoji-big').textContent   = myPrize.emoji;
+  document.getElementById('result-badge').textContent       = myPrize.label;
+  document.getElementById('result-badge').className         = 'result-rank-badge ' + myPrize.badge;
+  document.getElementById('result-prize-name').textContent  = myPrize.full;
+
+  goTo('screen-result');
+  launchParticles();
+}
+
+// ══ 파티클 ══
+function launchParticles() {
+  const colors = ['#D4AF7A','#C0162B','#fff','#CD7F32','#9BA3B0'];
+  const wrap   = document.getElementById('particles');
+  wrap.innerHTML = '';
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random()*100}%;
+      top:  ${-Math.random()*20}%;
+      background: ${colors[Math.floor(Math.random()*colors.length)]};
+      width:  ${4 + Math.random()*8}px;
+      height: ${4 + Math.random()*8}px;
+      border-radius: ${Math.random() > .5 ? '50%' : '2px'};
+      animation-delay: ${Math.random()*.8}s;
+      animation-duration: ${1.5 + Math.random()*1.5}s;
+    `;
+    wrap.appendChild(p);
+  }
+  setTimeout(() => { wrap.innerHTML = ''; }, 3000);
+}
+</script>
+</body>
+</html>
