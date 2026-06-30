@@ -82,7 +82,7 @@ html, body {
     radial-gradient(ellipse 80% 60% at 50% 0%, rgba(192,22,43,.5) 0%, transparent 60%),
     radial-gradient(ellipse 40% 40% at 80% 100%, rgba(212,175,122,.08) 0%, transparent 55%);
 }
-.intro-inner { position: relative; z-index: 1; max-width: 360px; width: 100%; }
+.intro-inner { position: relative; z-index: 1; max-width: 360px; width: 100%; padding-bottom: 80px; }
 .intro-badge {
   display: inline-block;
   background: rgba(212,175,122,.15); border: 1px solid rgba(212,175,122,.35);
@@ -144,6 +144,25 @@ html, body {
 }
 .btn-primary:hover { background: #a50d22; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(192,22,43,.4); }
 .btn-primary:active { transform: none; }
+
+
+/* ── 인트로 플로팅 참여하기 버튼 ── */
+.floating-join-btn {
+  position: fixed;
+  bottom: 24px;
+  left: 20px; right: 20px;
+  z-index: 50;
+  padding: 17px;
+  background: var(--red); color: #fff;
+  border: none; border-radius: 14px;
+  font-size: 16px; font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer; transition: all .2s;
+  letter-spacing: -.01em;
+  box-shadow: 0 10px 32px rgba(192,22,43,.5);
+}
+.floating-join-btn:hover { background: #a50d22; transform: translateY(-2px); }
+.floating-join-btn:active { transform: translateY(0); }
 
 /* ══ ② 정보 입력 화면 ══ */
 #screen-form {
@@ -463,8 +482,10 @@ html, body {
     </div>
 
     <p class="intro-note">당첨 상품은 7~8월 중 담당자가 직접 연락하여 전달해 드립니다.</p>
-    <button class="btn-primary" onclick="goTo('screen-form')">참여하기 →</button>
   </div>
+
+  <!-- 플로팅 참여하기 버튼 -->
+  <button class="floating-join-btn" onclick="goTo('screen-form')">참여하기 →</button>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -506,9 +527,22 @@ html, body {
       <div class="star-labels"><span>별로예요</span><span>매우 좋아요</span></div>
     </div>
 
+    <!-- 현재 사업자 관리서비스 만족도 -->
+    <div class="survey-card">
+      <div class="survey-title">현재 퇴직연금사업자의 퇴직연금 관리 서비스에 얼마나 만족하시나요?</div>
+      <div class="star-row" id="star-row-2">
+        <button class="star-btn" onclick="setStar2(1)" data-v="1">★</button>
+        <button class="star-btn" onclick="setStar2(2)" data-v="2">★</button>
+        <button class="star-btn" onclick="setStar2(3)" data-v="3">★</button>
+        <button class="star-btn" onclick="setStar2(4)" data-v="4">★</button>
+        <button class="star-btn" onclick="setStar2(5)" data-v="5">★</button>
+      </div>
+      <div class="star-labels"><span>별로예요</span><span>매우 좋아요</span></div>
+    </div>
+
     <!-- 이전 의사 -->
     <div class="survey-card">
-      <div class="survey-title">교보생명으로 이전 의사가 있으신가요?</div>
+      <div class="survey-title">퇴직연금사업자를 교보생명으로 변경할 의사가 있으신가요?</div>
       <div class="yn-row">
         <button class="yn-btn" id="yn-yes" onclick="setYN('YES')">👍 YES</button>
         <button class="yn-btn" id="yn-no"  onclick="setYN('NO')">🤔 NO</button>
@@ -604,8 +638,9 @@ let myPrize      = null;
 let userName     = '';
 let scratchPct   = 0;
 let revealed     = false;
-let satisfaction = 0;
-let transferYN   = '';
+let satisfaction  = 0;
+let satisfaction2 = 0;
+let transferYN    = '';
 
 // ══ 화면 전환 ══
 function goTo(screenId) {
@@ -614,10 +649,18 @@ function goTo(screenId) {
   window.scrollTo(0, 0);
 }
 
-// ══ 만족도 ══
+// ══ 만족도 (투자설명회) ══
 function setStar(v) {
   satisfaction = v;
-  document.querySelectorAll('.star-btn').forEach(btn => {
+  document.querySelectorAll('#star-row .star-btn').forEach(btn => {
+    btn.classList.toggle('on', parseInt(btn.dataset.v) <= v);
+  });
+}
+
+// ══ 만족도 (현재 사업자 관리서비스) ══
+function setStar2(v) {
+  satisfaction2 = v;
+  document.querySelectorAll('#star-row-2 .star-btn').forEach(btn => {
     btn.classList.toggle('on', parseInt(btn.dataset.v) <= v);
   });
 }
@@ -653,7 +696,7 @@ async function submitForm() {
   const consentErr = document.getElementById('consent-err');
 
   let ok = true;
-  if (!name || phone.replace(/\D/g,'').length < 10 || !workplace) {
+  if (!name || phone.replace(/\D/g,'').length < 10 || !workplace || satisfaction === 0 || satisfaction2 === 0 || transferYN === '') {
     mainErr.classList.add('on'); ok = false;
   } else { mainErr.classList.remove('on'); }
   if (!agreed) { consentErr.classList.add('on'); ok = false; }
@@ -676,6 +719,7 @@ async function submitForm() {
       const params = new URLSearchParams({
         name, phone, workplace,
         satisfaction: satisfaction + '점',
+        satisfaction2: satisfaction2 + '점',
         transfer: transferYN
       });
       try {
