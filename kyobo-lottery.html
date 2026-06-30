@@ -714,33 +714,49 @@ async function submitForm() {
     let prizeLabel = '3등'; // 기본값 (URL 미설정 시 테스트용)
 
     if (!SCRIPT_URL.startsWith('YOUR')) {
-      // 서버에서 당첨 결정 + 저장
-      // no-cors → 응답 읽기 불가 → cors 모드로 전환 시도
       const params = new URLSearchParams({
         name, phone, workplace,
         satisfaction: satisfaction + '점',
         satisfaction2: satisfaction2 + '점',
         transfer: transferYN
       });
-      try {
-        // cors 모드 먼저 시도 (Apps Script 배포 URL은 CORS 지원)
-        const res = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: params.toString()
-        });
-        const data = await res.json();
-        if (data.prize) prizeLabel = data.prize;
-      } catch(corsErr) {
-        // cors 실패 시 no-cors 폴백 (당첨은 클라이언트 확률로)
-        await fetch(SCRIPT_URL, {
-          method: 'POST', mode: 'no-cors',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: params.toString()
-        });
-        // 클라이언트 확률 추첨 (서버 응답 불가 시 폴백)
-        const rand = Math.random() * 200;
-        prizeLabel = rand < 10 ? '1등' : rand < 30 ? '2등' : '3등';
+
+      // 서버 혼잡(LockService 타임아웃) 대비 최대 3회 재시도
+      let success = false;
+      for (let attempt = 1; attempt <= 3 && !success; attempt++) {
+        try {
+          if (attempt > 1) {
+            btn.textContent = `⏳ 접속자가 많아요... 재시도 중 (${attempt}/3)`;
+            await new Promise(r => setTimeout(r, 1500)); // 1.5초 대기 후 재시도
+          }
+
+          const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+          });
+          const data = await res.json();
+
+          if (data.result === 'ok' && data.prize) {
+            prizeLabel = data.prize;
+            success = true;
+          } else if (data.result === 'error') {
+            // 서버가 혼잡하다고 응답 → 재시도
+            continue;
+          }
+        } catch(corsErr) {
+          if (attempt === 3) {
+            // 마지막 시도까지 실패 → no-cors 폴백 (저장은 시도, 당첨은 클라이언트 확률)
+            await fetch(SCRIPT_URL, {
+              method: 'POST', mode: 'no-cors',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: params.toString()
+            });
+            const rand = Math.random() * 200;
+            prizeLabel = rand < 10 ? '1등' : rand < 30 ? '2등' : '3등';
+            success = true;
+          }
+        }
       }
     } else {
       // 테스트 모드: 클라이언트 확률
